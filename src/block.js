@@ -1,7 +1,6 @@
 import { createElement, createTextElement } from './dom.js';
-import { createPublicClient, http, formatEther } from 'https://esm.sh/viem';
-import { localhost } from 'https://esm.sh/viem/chains';
-import { getBlock } from 'https://esm.sh/viem/actions';
+import { formatEther } from 'https://esm.sh/viem';
+import { createClient } from './helpers/explorer.js';
 
 const blockList = document.querySelector('#list');
 const subTitle = document.querySelector('h4');
@@ -9,11 +8,7 @@ const subTitle = document.querySelector('h4');
 let client = undefined;
 
 const initApp = async () => {
-  client = createPublicClient({
-    chain: localhost,
-    transport: http('http://localhost:7545'),
-  });
-
+  client = createClient();
   getBalance();
   listAllBlocks();
 };
