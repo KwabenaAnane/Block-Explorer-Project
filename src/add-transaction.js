@@ -1,5 +1,6 @@
-import { createWalletClient, http, parseEther } from 'https://esm.sh/viem';
-import { localhost } from 'https://esm.sh/viem/chains';
+import { parseEther } from 'https://esm.sh/viem';
+
+import { createWallet } from './helpers/explorer.js';
 
 const form = document.querySelector('#transaction-form');
 const fromInput = document.querySelector('#from');
@@ -8,10 +9,7 @@ const valueInput = document.querySelector('#value');
 
 let client = undefined;
 const initApp = () => {
-  client = createWalletClient({
-    chain: localhost,
-    transport: http('http://localhost:7545'),
-  });
+  client = createWallet();
 };
 
 const createTransaction = async (e) => {

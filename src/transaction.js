@@ -1,5 +1,6 @@
 import { createPublicClient, http } from 'https://esm.sh/viem';
-import { localhost } from 'https://esm.sh/viem/chains';
+
+import { createClient } from './helpers/explorer';
 
 const transactionDetailsDisplay = document.querySelector('#transactionDetails');
 
@@ -7,40 +8,28 @@ let client = undefined;
 
 const initApp = () => {
   const hash = location.search.split('=')[1];
-  client = createPublicClient({
-    chain: localhost,
-    transport: http('http://localhost:7545'),
-  });
-
+  client = createClient();
   displayTransactionDetails(hash);
 };
 
 const displayTransactionDetails = async (hash) => {
   const block = await client.getBlock({ blockHash: hash });
-  // console.log(block);
-  // console.log(block.transactions);
-  if (block.transactions.length === 0) {
-    generateDisplay(block);
-    return;
-  }
+
+  generateBlockInfo(block);
 
   for (let trx of block.transactions) {
     const transaction = await client.getTransaction({
       hash: trx,
     });
 
-    generateDisplay(block, transaction);
+    generateTransactionInfo(transaction);
   }
 };
 
-const generateDisplay = (block, transaction) => {
+const generateBlockInfo = (block) => {
   let html = '';
   transactionDetailsDisplay.innerHTML = html;
 
-  if (!transaction) {
-    document.querySelector('.page-title').innerText = 'NO TRANSACTIONS';
-    return;
-  }
   html = `
   <h2 id = 'blockNumber'> BLOCK NUMBER ${block.number} </h2>
   <article class='trx-details'>
@@ -65,9 +54,19 @@ const generateDisplay = (block, transaction) => {
       <span>Block Hash</span>
       <small>${block.hash}</small>
     </section>
-     </article>
-    
+     </article>  
+  `;
+  transactionDetailsDisplay.innerHTML = html;
+};
 
+const generateTransactionInfo = (transaction) => {};
+
+const generateDisplay = (block, transaction) => {
+  if (!transaction) {
+    document.querySelector('.page-title').innerText = 'NO TRANSACTIONS';
+    return;
+  }
+  html = `
     <h2 id ='trxHash'>TX Hash ${transaction.hash}</h2>
     <article class='trx-details'>
      <section>
@@ -94,7 +93,7 @@ const generateDisplay = (block, transaction) => {
 
 `;
 
-  transactionDetailsDisplay.innerHTML = html;
+  transactionDetailsDisplay.innerHTML += html;
 };
 
 document.addEventListener('DOMContentLoaded', initApp);
