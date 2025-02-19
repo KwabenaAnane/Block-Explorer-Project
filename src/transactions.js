@@ -1,17 +1,14 @@
 import { createPublicClient, http, formatEther } from 'https://esm.sh/viem';
-import { localhost } from 'https://esm.sh/viem/chains';
-import { getBlock } from 'https://esm.sh/viem/actions';
+import { createClient } from './helpers/explorer.js';
 import { createElement, createTextElement } from './dom.js';
+import { createClient } from './helpers/explorer.js';
 
 const transactionList = document.querySelector('#list');
 
 let client = undefined;
 
 const initApp = () => {
-  client = createPublicClient({
-    chain: localhost,
-    transport: http('http://localhost:7545'),
-  });
+  client = createClient();
 
   listTransactions();
 };
@@ -44,7 +41,6 @@ const listTransactions = async () => {
       transactionList.appendChild(div);
     }
   }
-  //transactionList.innerHTML = '';
 };
 
 document.addEventListener('DOMContentLoaded', initApp);
