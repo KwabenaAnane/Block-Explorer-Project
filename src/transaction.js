@@ -1,6 +1,4 @@
-import { createPublicClient, http } from 'https://esm.sh/viem';
-
-import { createClient } from './helpers/explorer';
+import { createClient } from './helpers/explorer.js';
 
 const transactionDetailsDisplay = document.querySelector('#transactionDetails');
 
@@ -59,13 +57,8 @@ const generateBlockInfo = (block) => {
   transactionDetailsDisplay.innerHTML = html;
 };
 
-const generateTransactionInfo = (transaction) => {};
-
-const generateDisplay = (block, transaction) => {
-  if (!transaction) {
-    document.querySelector('.page-title').innerText = 'NO TRANSACTIONS';
-    return;
-  }
+const generateTransactionInfo = (transaction) => {
+  let html = '';
   html = `
     <h2 id ='trxHash'>TX Hash ${transaction.hash}</h2>
     <article class='trx-details'>
@@ -90,10 +83,7 @@ const generateDisplay = (block, transaction) => {
     </section>
 
   </article>
-
 `;
-
   transactionDetailsDisplay.innerHTML += html;
 };
-
 document.addEventListener('DOMContentLoaded', initApp);
